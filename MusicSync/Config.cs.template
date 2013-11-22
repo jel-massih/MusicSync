@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MusicSync
+{
+    class Config
+    {
+        public static String Username = "[Username]";
+        public static String Password = "[Password]";
+        public static String ServerURL = "[FTP Server URL]";
+        public static String DefaultLocalDir = "[Local Dir]";
+    }
+}
