@@ -12,27 +12,36 @@ namespace MusicSync
     {
         private FtpWebRequest request;
 
-        public bool UpdateRequestPath(String path)
+        public FTPManager()
         {
-            request = (FtpWebRequest)WebRequest.Create(path);
-            request.Credentials = new NetworkCredential(Config.Username, Config.Password);
-            return true;
+            UpdateRequestPath();
         }
 
-        public void UpdateCredentials(String user, String pass)
+        public bool UpdateRequestPath()
         {
-            request.Credentials = new NetworkCredential(user, pass);
+            try
+            {
+                request = (FtpWebRequest)WebRequest.Create(new Uri(Config.ServerURL, UriKind.Absolute));
+                request.Credentials = new NetworkCredential(Config.Username, Config.Password);
+                return true;
+            }
+            catch (Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+                return false;
+            }
         }
 
         public String[] GetFileList()
         {
-            request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+            request.Method = WebRequestMethods.Ftp.ListDirectory;
             
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
 
             Stream responseStream = response.GetResponseStream();
             StreamReader reader = new StreamReader(responseStream);
-            String[] files = reader.ReadToEnd().Split('\n');
+            String dirStr = reader.ReadToEnd().Replace("\r","");
+            String[] files = dirStr.Split('\n');
 
             reader.Close();
             response.Close();
