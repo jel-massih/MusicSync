@@ -46,6 +46,8 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.viewDiffBtn = new System.Windows.Forms.Button();
+            this.ftpTransferWorker = new System.ComponentModel.BackgroundWorker();
+            this.fileProgressBar = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // localListBox
@@ -117,7 +119,7 @@
             // syncBtn
             // 
             this.syncBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.syncBtn.Location = new System.Drawing.Point(12, 405);
+            this.syncBtn.Location = new System.Drawing.Point(12, 424);
             this.syncBtn.Margin = new System.Windows.Forms.Padding(2);
             this.syncBtn.Name = "syncBtn";
             this.syncBtn.Size = new System.Drawing.Size(70, 32);
@@ -130,7 +132,7 @@
             // 
             this.syncInfoLbl.AutoSize = true;
             this.syncInfoLbl.BackColor = System.Drawing.Color.Transparent;
-            this.syncInfoLbl.Location = new System.Drawing.Point(94, 414);
+            this.syncInfoLbl.Location = new System.Drawing.Point(94, 433);
             this.syncInfoLbl.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.syncInfoLbl.Name = "syncInfoLbl";
             this.syncInfoLbl.Size = new System.Drawing.Size(52, 13);
@@ -161,7 +163,7 @@
             // 
             // syncProgressBar
             // 
-            this.syncProgressBar.Location = new System.Drawing.Point(86, 405);
+            this.syncProgressBar.Location = new System.Drawing.Point(86, 424);
             this.syncProgressBar.Margin = new System.Windows.Forms.Padding(2);
             this.syncProgressBar.Name = "syncProgressBar";
             this.syncProgressBar.Size = new System.Drawing.Size(885, 32);
@@ -200,11 +202,28 @@
             this.viewDiffBtn.UseVisualStyleBackColor = true;
             this.viewDiffBtn.Click += new System.EventHandler(this.viewDiffBtn_Click);
             // 
+            // ftpTransferWorker
+            // 
+            this.ftpTransferWorker.WorkerReportsProgress = true;
+            this.ftpTransferWorker.WorkerSupportsCancellation = true;
+            this.ftpTransferWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.ftpTransferWorker_DoWork);
+            this.ftpTransferWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.ftpTransferWorker_ProgressChanged);
+            this.ftpTransferWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.ftpTransferWorker_RunWorkerCompleted);
+            // 
+            // fileProgressBar
+            // 
+            this.fileProgressBar.Location = new System.Drawing.Point(86, 392);
+            this.fileProgressBar.Margin = new System.Windows.Forms.Padding(2);
+            this.fileProgressBar.Name = "fileProgressBar";
+            this.fileProgressBar.Size = new System.Drawing.Size(885, 23);
+            this.fileProgressBar.TabIndex = 17;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1083, 452);
+            this.ClientSize = new System.Drawing.Size(1083, 467);
+            this.Controls.Add(this.fileProgressBar);
             this.Controls.Add(this.viewDiffBtn);
             this.Controls.Add(this.serverListBox);
             this.Controls.Add(this.refreshLocalBtn);
@@ -245,6 +264,8 @@
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button viewDiffBtn;
+        private System.Windows.Forms.ProgressBar fileProgressBar;
+        public System.ComponentModel.BackgroundWorker ftpTransferWorker;
     }
 }
 

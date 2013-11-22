@@ -43,11 +43,12 @@ namespace MusicSync
 
             try
             {
-                LocalFiles = Directory.EnumerateFiles(localDirectoryTF.Text).Select(Path.GetFileName).ToArray();
+                LocalFiles = Directory.GetFiles(localDirectoryTF.Text);
                 foreach (String fileName in LocalFiles)
                 {
-                    if (fileName.Length < 3) { continue; }
-                    ListViewItem item = new ListViewItem(fileName, 1);
+                    String ShortName = Path.GetFileName(fileName);
+                    if (ShortName.Length < 3) { continue; }
+                    ListViewItem item = new ListViewItem(ShortName, 1);
                     localListBox.Items.Add(item);
                 }
                 GetDiff();
@@ -104,7 +105,8 @@ namespace MusicSync
 
             foreach (String locFile in LocalFiles)
             {
-                if (!RemoteFiles.Contains(locFile))
+                String ShortName = Path.GetFileName(locFile);
+                if (!RemoteFiles.Contains(ShortName))
                 {
                     UploadFiles.Add(locFile);
                 }
@@ -112,7 +114,7 @@ namespace MusicSync
 
             foreach (String remoteFile in RemoteFiles)
             {
-                if (!LocalFiles.Contains(remoteFile))
+                if (!LocalFiles.Select(Path.GetFileName).Contains(remoteFile))
                 {
                     DownloadFiles.Add(remoteFile);
                 }
@@ -121,13 +123,45 @@ namespace MusicSync
 
         private void syncBtn_Click(object sender, EventArgs e)
         {
-
+            if (!ftpTransferWorker.IsBusy)
+            {
+                ftpTransferWorker.RunWorkerAsync();
+            }
         }
 
         private void viewDiffBtn_Click(object sender, EventArgs e)
         {
             DiffForm diffForm = new DiffForm(UploadFiles.ToArray(), DownloadFiles.ToArray());
             diffForm.Show();
+        }
+
+        private void ftpTransferWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            int i=0;
+            foreach (String upFile in UploadFiles)
+            {
+                ftpManager.UploadFile(upFile, this);
+                i++;
+                ftpTransferWorker.ReportProgress((int)(((double)i / (double)UploadFiles.Count) * 100), "Sync");
+            }   
+        }
+
+        private void ftpTransferWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (e.UserState == "Sync")
+            {
+                syncProgressBar.Value = e.ProgressPercentage;
+            }
+            else if (e.UserState == "File")
+            {
+                fileProgressBar.Value = e.ProgressPercentage;
+            }
+            System.Diagnostics.Debug.WriteLine(e.ProgressPercentage + " __ " + e.UserState);
+        }
+
+        private void ftpTransferWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+
         }
     }
 }
