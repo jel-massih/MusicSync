@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace MusicSync
 {
@@ -14,9 +15,15 @@ namespace MusicSync
         public String[] LocalFiles;
         public String[] RemoteFiles;
 
+        public List<String> UploadFiles;
+        public List<String> DownloadFiles;
+
         public Form1()
         {
             InitializeComponent();
+
+            UploadFiles = new List<string>();
+            DownloadFiles = new List<string>();
 
             localDirectoryTF.Text = Config.DefaultLocalDir;
             LoadLocalDirectoryList();
@@ -32,36 +39,36 @@ namespace MusicSync
             {
                 return;
             }
+            localListBox.Items.Clear();
 
             try
             {
                 LocalFiles = Directory.EnumerateFiles(localDirectoryTF.Text).Select(Path.GetFileName).ToArray();
-                localListBox.Clear();
-                localListBox.BeginUpdate();
                 foreach (String fileName in LocalFiles)
                 {
+                    if (fileName.Length < 3) { continue; }
                     ListViewItem item = new ListViewItem(fileName, 1);
                     localListBox.Items.Add(item);
                 }
-                localListBox.EndUpdate();
+                GetDiff();
             }
             catch (Exception) { }
         }
 
         private void LoadServerDirectoryList()
         {
+            serverListBox.Items.Clear();
             try
             {
-                serverListBox.Clear();
-                serverListBox.BeginUpdate();
                 RemoteFiles = ftpManager.GetFileList();
                 foreach (String fileName in RemoteFiles)
                 {
+                    if (fileName.Length < 3) { continue; }
                     ListViewItem item = new ListViewItem(fileName, 1);
 
                     serverListBox.Items.Add(item);
                 }
-                serverListBox.EndUpdate();
+                GetDiff();
             }
             catch (Exception e) 
             {
@@ -88,6 +95,39 @@ namespace MusicSync
         private void refreshServerBtn_Click(object sender, EventArgs e)
         {
             LoadServerDirectoryList();
+        }
+
+        private void GetDiff()
+        {
+            UploadFiles.Clear();
+            DownloadFiles.Clear();
+
+            foreach (String locFile in LocalFiles)
+            {
+                if (!RemoteFiles.Contains(locFile))
+                {
+                    UploadFiles.Add(locFile);
+                }
+            }
+
+            foreach (String remoteFile in RemoteFiles)
+            {
+                if (!LocalFiles.Contains(remoteFile))
+                {
+                    DownloadFiles.Add(remoteFile);
+                }
+            }
+        }
+
+        private void syncBtn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void viewDiffBtn_Click(object sender, EventArgs e)
+        {
+            DiffForm diffForm = new DiffForm(UploadFiles.ToArray(), DownloadFiles.ToArray());
+            diffForm.Show();
         }
     }
 }

@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.localListBox = new System.Windows.Forms.ListView();
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.browseBtn = new System.Windows.Forms.Button();
@@ -41,10 +42,10 @@
             this.refreshLocalBtn = new System.Windows.Forms.Button();
             this.syncProgressBar = new System.Windows.Forms.ProgressBar();
             this.serverListBox = new System.Windows.Forms.ListView();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.viewDiffBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // localListBox
@@ -58,6 +59,11 @@
             this.localListBox.TabIndex = 1;
             this.localListBox.UseCompatibleStateImageBehavior = false;
             this.localListBox.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Name";
+            this.columnHeader2.Width = 600;
             // 
             // label1
             // 
@@ -118,6 +124,7 @@
             this.syncBtn.TabIndex = 11;
             this.syncBtn.Text = "Sync";
             this.syncBtn.UseVisualStyleBackColor = true;
+            this.syncBtn.Click += new System.EventHandler(this.syncBtn_Click);
             // 
             // syncInfoLbl
             // 
@@ -172,27 +179,33 @@
             this.serverListBox.UseCompatibleStateImageBehavior = false;
             this.serverListBox.View = System.Windows.Forms.View.Details;
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 600;
+            // 
             // imageList1
             // 
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             // 
-            // columnHeader1
+            // viewDiffBtn
             // 
-            this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 600;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Name";
-            this.columnHeader2.Width = 600;
+            this.viewDiffBtn.Location = new System.Drawing.Point(15, 362);
+            this.viewDiffBtn.Name = "viewDiffBtn";
+            this.viewDiffBtn.Size = new System.Drawing.Size(131, 23);
+            this.viewDiffBtn.TabIndex = 16;
+            this.viewDiffBtn.Text = "View Diff";
+            this.viewDiffBtn.UseVisualStyleBackColor = true;
+            this.viewDiffBtn.Click += new System.EventHandler(this.viewDiffBtn_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1083, 452);
+            this.Controls.Add(this.viewDiffBtn);
             this.Controls.Add(this.serverListBox);
             this.Controls.Add(this.refreshLocalBtn);
             this.Controls.Add(this.refreshServerBtn);
@@ -231,6 +244,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Button viewDiffBtn;
     }
 }
 
